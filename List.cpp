@@ -64,6 +64,22 @@ void List::pop_back()
     }
 }
 
+void List::pop_front()
+{
+    if (m_head->next != m_head)
+    {
+        Node* aux = m_head->next;
+        m_head->next = aux->next;
+        aux->next->prev = m_head;
+        delete aux;
+        m_size--;
+    }
+    else
+    {
+        throw std::out_of_range("Lista vazia");
+    }
+}
+
 bool List::empty() const
 {
     return m_size == 0;
@@ -98,21 +114,6 @@ int& List::back()
     }
 }
 
-void List::pop_front()
-{
-    if (m_head->next != m_head)
-    {
-        Node* aux = m_head->next;
-        m_head->next = aux->next;
-        aux->next->prev = m_head;
-        delete aux;
-        m_size--;
-    }
-    else
-    {
-        throw std::out_of_range("Lista vazia");
-    }
-}
 
 void List::clear()
 {
@@ -148,6 +149,7 @@ void List::remove(const int& val)
         aux = aux->next;
     }
 }
+
 
 void List::bubbleSort(){
     if (m_size < 2)

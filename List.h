@@ -93,14 +93,14 @@ public:
     void push_back(const int& v);
     void push_front(const int& v);
     void pop_back();
+    void pop_front();
     bool empty() const;
     size_t size() const;
     int& front();
     int& back();
-    void pop_front();
     void clear();
     void remove(const int& val);
-    
+
     void bubbleSort();
     void insertionSort();
     void selectionSort();
