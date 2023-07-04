@@ -36,6 +36,21 @@ List::List(const List& lst)
     m_size = lst.m_size;
 }
 
+Node* List::get(int i){
+    if (i >= m_size || i < 0)
+    {
+        throw std::out_of_range("Fora da lista");
+    }
+
+    Node* aux = m_head->next;
+    while (i != 0 )
+    {
+        aux = aux->next;
+        i--;
+    }
+    return aux;
+}
+
 void List::push_back(const int& v)
 {
     Node* aux = new Node(v, m_head->prev, m_head);
@@ -114,7 +129,6 @@ int& List::back()
     }
 }
 
-
 void List::clear()
 {
     Node* aux = m_head->next;
@@ -150,30 +164,31 @@ void List::remove(const int& val)
     }
 }
 
-
-void List::bubbleSort(){
+void List::bubbleSort()
+{
     if (m_size < 2)
     {
         return;
     }
-    bool swap;
+
+    bool swapped;
 
     do
     {
-        swap == false;
-        Node* current = m_head++;
-        while (current++ != m_head)
+        swapped = false;
+        Node* current = m_head->next;
+
+        while (current != m_head->prev)
         {
             if (current->value > current->next->value)
             {
-            int aux = current->value;
-            current->value = current->next->value;
-            current->next->value = aux;
-            swap = true;
+                std::swap(current->value, current->next->value);
+                swapped = true;
             }
-            current = current++;
+
+            current = current->next;
         }
-    }while (swap);
+    } while (swapped);
 }
 
 void List::insertionSort()
@@ -199,19 +214,19 @@ void List::insertionSort()
 
 void List::selectionSort()
 {
-    if (m_size <= 1)
+    if (m_size < 2)
         return;
 
-    Node* current = m_head++;
-    while (current++ != m_head)
+    Node* current = m_head->next;
+    while (current->next != m_head)
     {
         Node* min = current;
-        Node* temp = current++;
+        Node* temp = current->next;
         while (temp != m_head)
         {
             if (temp->value < min->value)
                 min = temp;
-            temp = temp++;
+            temp = temp->next;
         }
         if (min != current)
         {
@@ -219,7 +234,106 @@ void List::selectionSort()
             current->value = min->value;
             min->value = tempValue;
         }
-        current = current++;
+        current = current->next;
+    }
+}
+
+//QuickSort
+void List::quickSort(){
+    quickSortRecursive(m_head->next,m_head->prev);
+}
+
+void List::quickSortRecursive(Node* low, Node* high){
+    if (low != high && low != m_head && high != m_head && low != high->next){
+        Node* pivo = partition(low, high);
+        quickSortRecursive(low, pivo->prev);
+        quickSortRecursive(pivo->next, high);
+    }
+}
+
+Node* List::partition(Node* low, Node* high){
+    int pivot = high->value;
+    Node* aux = low->prev;
+
+    for (Node* j = low; j != high; j = j->next)
+    {
+        if (j->value <= pivot)
+        {
+            aux = (aux == nullptr) ? low : aux->next;
+            std::swap(aux->value, j->value);
+        }
+    }
+
+     aux = (aux == nullptr) ? low : aux->next;
+    std::swap(aux->value, high->value);
+
+    return aux;
+}
+//QuickSort
+
+//MergeSort
+void List::mergeSort(){
+      if (m_size < 2) {
+        return;
+    }
+    
+    this->merge(0, this->m_size - 1);
+}
+
+void List::merge(int l, int r){
+    if (l == r) return;
+    int mid = (l+r) / 2;
+
+    merge(l,mid);
+    merge(mid+1,r);
+
+    // criar listas l
+    List leftHalf;
+    List rightHalf;
+    
+    for(int i = l; i <= mid; i++) {
+        leftHalf.push_back(get(i)->value);
+    }
+
+    for (int i = mid + 1; i <= r; i++)
+    {
+        rightHalf.push_back(get(i)->value);
+    }
+
+    leftHalf.push_back(INT32_MAX);
+    rightHalf.push_back(INT32_MAX);
+ 
+    for (int i = l, i1 = 0, i2 = 0; i <= r; ++ i)
+    {
+         if(leftHalf.get(i1)->value < rightHalf.get(i2)->value) 
+            this->get(i)->value = leftHalf.get(i1 ++)->value;
+        else 
+            this->get(i)->value = rightHalf.get(i2 ++)->value;
+    }
+}
+
+void List::shellSort()
+{
+    int n = m_size;
+    int gap = n / 2;
+
+    while (gap > 0)
+    {
+        for (int i = gap; i < n; i++)
+        {
+            int temp = get(i)->value;
+            int j = i;
+
+            while (j >= gap && get(j - gap)->value > temp)
+            {
+                get(j)->value = get(j - gap)->value;
+                j -= gap;
+            }
+
+            get(j)->value = temp;
+        }
+
+        gap /= 2;
     }
 }
 

@@ -90,6 +90,7 @@ public:
     iterator end();
     List();
     List(const List& lst);
+    Node* get(int i);
     void push_back(const int& v);
     void push_front(const int& v);
     void pop_back();
@@ -104,8 +105,15 @@ public:
     void bubbleSort();
     void insertionSort();
     void selectionSort();
-    //void mergeSort();
-    //QuickSort
+    //quicksort
+    void quickSort();
+    void quickSortRecursive(Node* low, Node* high);
+    Node* partition(Node* low, Node* high);
+    //mergeSort;
+    void mergeSort();
+    void merge(int l, int r);
+    void shellSort();
+    
 };
 
 #endif
