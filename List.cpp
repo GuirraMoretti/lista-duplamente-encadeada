@@ -159,6 +159,7 @@ void List::remove(const int& val)
 
 // ALGORITMOS DE ORDENACAO
 
+//BubbleSort
 void List::bubbleSort()
 {
     if (m_size < 2)
@@ -207,6 +208,7 @@ void List::insertionSort()
     }
 }
 
+//selectionsort
 void List::selectionSort()
 {
     if (m_size < 2)
@@ -265,11 +267,8 @@ Node* List::partition(Node* low, Node* high){
 
     return aux;
 }
-//QuickSort
 
 //MergeSort
-
-
 void List::mergeSort(){
       if (m_size < 2) {
         return;
@@ -285,15 +284,12 @@ void List::merge(int l, int r){
     merge(l, mid);
     merge(mid + 1, r);
 
-    // Criar listas leftHalf e rightHalf
     List leftHalf;
     List rightHalf;
 
-    // Criar iteradores para percorrer a lista original
     List::iterator it = begin();
     int index = 0;
 
-    // Copiar elementos de leftHalf e rightHalf para suas respectivas listas
     while (index <= r) {
         if (index >= l && index <= mid) {
             leftHalf.push_back(*it);
@@ -304,11 +300,9 @@ void List::merge(int l, int r){
         ++index;
     }
 
-    // Adicionar sentinelas para indicar o final das listas
     leftHalf.push_back(INT32_MAX);
     rightHalf.push_back(INT32_MAX);
 
-    // Mesclar as listas leftHalf e rightHalf de volta para a lista original
     List::iterator itL = leftHalf.begin();
     List::iterator itR = rightHalf.begin();
 
@@ -326,6 +320,7 @@ void List::merge(int l, int r){
     }
 }
 
+//ShellSort
 void List::shellSort()
 {
     int n = m_size;

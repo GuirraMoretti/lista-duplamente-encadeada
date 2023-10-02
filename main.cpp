@@ -1,25 +1,20 @@
 /**
  * @file main.cpp
- * @author Atilio G. Luiz
- * @brief Projeto Final - ED --- Arquivo de Exemplo
- * @version 0.1
- * @date 2023-06-16
+ * @author Atilio G. Luiz, Guilherme Lima Moretti, Vitoria Ashiley
+ * @brief Projeto Final - ED --- Lista duplamente encadeada com ordenacao
+ * @version 1.0
+ * @date 2023-10-02
  * 
  * @copyright Copyright (c) 2023
  * 
  */
+
 #include <iostream>
 #include <fstream> // cabecalho para leitura e escrita de arquivo
 #include <chrono>  // cabecalho para medicao de tempo 
 #include "List.h"
 using namespace std;
 
-/** 
- * Funcao que gera arquivos binarios, cada um contendo numeros aleatorios.
- * Essa funcao recebe um array 'vetor_tam' que contem todos os tamanhos N
- * de vetores aleatorios que serao gerados. O parametro 'num_iteracoes' eh
- * o tamanho do array 'vetor_tam' 
- */
 
 void gera_dados(const int& num_iteracoes, const int vetor_tam[]) {
 	for(int n = 0; n < num_iteracoes; ++n) {
@@ -76,7 +71,7 @@ int main(){
 	
 	const int TOTAL_N = sizeof(tam)/sizeof(tam[0]); // determina tamanho do vetor 'tam'
 
-	//executar apenas uma vez (JA FOI)
+	//gerar dados dat
     gera_dados(TOTAL_N, tam);
 	
     //Escolhendo o algoritmo 
