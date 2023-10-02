@@ -1,13 +1,14 @@
-#include "list.h"
+#include "List.h"
+#include <cstdint>
 
 List::iterator List::begin()
 {
-    return iterator(m_head->next);
+    return iterator(m_head);
 }
 
 List::iterator List::end()
 {
-    return iterator(m_head);
+    return iterator(m_head->prev);
 }
 
 List::List()
@@ -34,21 +35,6 @@ List::List(const List& lst)
     }
     m_head->prev = auxMain;
     m_size = lst.m_size;
-}
-
-Node* List::get(int i){
-    if (i >= m_size || i < 0)
-    {
-        throw std::out_of_range("Fora da lista");
-    }
-
-    Node* aux = m_head->next;
-    while (i != 0 )
-    {
-        aux = aux->next;
-        i--;
-    }
-    return aux;
 }
 
 void List::push_back(const int& v)
@@ -145,6 +131,12 @@ void List::clear()
     m_size = 0;
 }
 
+void List::swap(Node *a, Node* b){
+    int t = a->value;
+    a->value = b->value;
+    b->value = t;
+}
+
 void List::remove(const int& val)
 {
     Node* aux = m_head->next;
@@ -163,6 +155,9 @@ void List::remove(const int& val)
         aux = aux->next;
     }
 }
+
+
+// ALGORITMOS DE ORDENACAO
 
 void List::bubbleSort()
 {
@@ -222,11 +217,12 @@ void List::selectionSort()
     {
         Node* min = current;
         Node* temp = current->next;
-        while (temp != m_head)
-        {
-            if (temp->value < min->value)
+        while (temp != m_head){
+            if (temp->value < min->value){
                 min = temp;
-            temp = temp->next;
+            }
+            temp = temp->next;       
+                
         }
         if (min != current)
         {
@@ -255,23 +251,25 @@ Node* List::partition(Node* low, Node* high){
     int pivot = high->value;
     Node* aux = low->prev;
 
-    for (Node* j = low; j != high; j = j->next)
+    for (Node* j = low; j != high; j = j ->next)
     {
         if (j->value <= pivot)
         {
             aux = (aux == nullptr) ? low : aux->next;
-            std::swap(aux->value, j->value);
+            List::swap(aux, j);
         }
     }
 
-     aux = (aux == nullptr) ? low : aux->next;
-    std::swap(aux->value, high->value);
+    aux = (aux == nullptr) ? low : aux->next;
+    List::swap(aux, high);
 
     return aux;
 }
 //QuickSort
 
 //MergeSort
+
+
 void List::mergeSort(){
       if (m_size < 2) {
         return;
@@ -282,33 +280,49 @@ void List::mergeSort(){
 
 void List::merge(int l, int r){
     if (l == r) return;
-    int mid = (l+r) / 2;
+    int mid = (l + r) / 2;
 
-    merge(l,mid);
-    merge(mid+1,r);
+    merge(l, mid);
+    merge(mid + 1, r);
 
-    // criar listas l
+    // Criar listas leftHalf e rightHalf
     List leftHalf;
     List rightHalf;
-    
-    for(int i = l; i <= mid; i++) {
-        leftHalf.push_back(get(i)->value);
+
+    // Criar iteradores para percorrer a lista original
+    List::iterator it = begin();
+    int index = 0;
+
+    // Copiar elementos de leftHalf e rightHalf para suas respectivas listas
+    while (index <= r) {
+        if (index >= l && index <= mid) {
+            leftHalf.push_back(*it);
+        } else if (index > mid && index <= r) {
+            rightHalf.push_back(*it);
+        }
+        ++it;
+        ++index;
     }
 
-    for (int i = mid + 1; i <= r; i++)
-    {
-        rightHalf.push_back(get(i)->value);
-    }
-
+    // Adicionar sentinelas para indicar o final das listas
     leftHalf.push_back(INT32_MAX);
     rightHalf.push_back(INT32_MAX);
- 
-    for (int i = l, i1 = 0, i2 = 0; i <= r; ++ i)
-    {
-         if(leftHalf.get(i1)->value < rightHalf.get(i2)->value) 
-            this->get(i)->value = leftHalf.get(i1 ++)->value;
-        else 
-            this->get(i)->value = rightHalf.get(i2 ++)->value;
+
+    // Mesclar as listas leftHalf e rightHalf de volta para a lista original
+    List::iterator itL = leftHalf.begin();
+    List::iterator itR = rightHalf.begin();
+
+    index = l;
+    while (index <= r) {
+        if (*itL < *itR) {
+            *it = *itL;
+            ++itL;
+        } else {
+            *it = *itR;
+            ++itR;
+        }
+        ++it;
+        ++index;
     }
 }
 
@@ -319,21 +333,24 @@ void List::shellSort()
 
     while (gap > 0)
     {
+
+        Node * aux = m_head->next;
+
         for (int i = gap; i < n; i++)
         {
-            int temp = get(i)->value;
-            int j = i;
+            int temp = aux->value;
+            Node *j = aux;
 
-            while (j >= gap && get(j - gap)->value > temp)
+            while (j != m_head && j->prev->value > temp)
             {
-                get(j)->value = get(j - gap)->value;
-                j -= gap;
+                j->value = j->prev->value;
+                j = j->prev;
             }
 
-            get(j)->value = temp;
+             j->value = temp;
+            aux = aux->next;
         }
 
         gap /= 2;
     }
 }
-

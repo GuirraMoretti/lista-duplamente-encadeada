@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <cstdint>
 
 struct Node
 {
@@ -79,6 +80,19 @@ public:
             return it_old;
         }
 
+        iterator operator--()
+        {
+            pointer = pointer->prev;
+            return *this;
+        }
+
+        iterator operator--(int)
+        {
+            iterator it_old(pointer);
+            pointer = pointer->prev;
+            return it_old;
+        }
+
         iterator operator=(const iterator& it)
         {
             pointer = it.pointer;
@@ -90,7 +104,6 @@ public:
     iterator end();
     List();
     List(const List& lst);
-    Node* get(int i);
     void push_back(const int& v);
     void push_front(const int& v);
     void pop_back();
@@ -101,6 +114,7 @@ public:
     int& back();
     void clear();
     void remove(const int& val);
+    void swap(Node* a,Node* b);
 
     void bubbleSort();
     void insertionSort();
